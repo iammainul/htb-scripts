@@ -31,10 +31,11 @@ python find_ids.py TERMS_FILE SEARCH_DIR --counts
 
 ## fgrep.py
 
-Dead-simple multithreaded equivalent of `for i in $(cat IDS_FILE); do echo "== $i"; grep -rnl -- "$i" FOLDER; done`. Positional args only. Prints each term and the matching file paths (like `grep -l`).
+Dead-simple multithreaded equivalent of `for i in $(cat IDS_FILE); do echo "== $i"; grep -rnl -- "$i" FOLDER; done`. Positional args only. Prints one line per match as `ID<TAB>file_path`. IDs with no match are omitted.
 
 **Requirements:** Python 3.8+, standard library only (nothing to `pip install`).
 
 ```
-python3 fgrep.py IDS_FILE FOLDER > results.txt
+python3 fgrep.py IDS_FILE FOLDER > matches.txt
 ```
+
