@@ -14,3 +14,17 @@ python extract_fields.py -f data.xlsx -k name email --sheet Users -o out.csv
 ```
 
 Running with no arguments prompts for files and fields interactively.
+
+## find_ids.py
+
+Multithreaded replacement for a per-term recursive grep loop. Reads a list of search terms and a directory, scans each file once in parallel, and prints only the terms that were found (input order). **File names and paths are deliberately never printed or saved.**
+
+**Requirements:** Python 3.8+, standard library only (nothing to `pip install`). Works on Linux, macOS, and Windows.
+
+```
+python find_ids.py TERMS_FILE SEARCH_DIR
+python find_ids.py TERMS_FILE SEARCH_DIR -t 8 -o found.txt
+python find_ids.py TERMS_FILE SEARCH_DIR --counts
+```
+
+`--counts` prints `term<TAB>number_of_files` instead of the term alone. Run `python test_find_ids.py` for the automated checks.

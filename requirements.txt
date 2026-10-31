@@ -1,1 +1,3 @@
 openpyxl
+# find_ids.py uses the Python standard library only; nothing extra to install
+
