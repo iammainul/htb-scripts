@@ -28,3 +28,13 @@ python find_ids.py TERMS_FILE SEARCH_DIR --counts
 ```
 
 `--counts` prints `term<TAB>number_of_files` instead of the term alone. Run `python test_find_ids.py` for the automated checks.
+
+## fgrep.py
+
+Dead-simple multithreaded equivalent of `for i in $(cat IDS_FILE); do echo "== $i"; grep -rnl -- "$i" FOLDER; done`. Positional args only. Prints each term and the matching file paths (like `grep -l`).
+
+**Requirements:** Python 3.8+, standard library only (nothing to `pip install`).
+
+```
+python3 fgrep.py IDS_FILE FOLDER > results.txt
+```
