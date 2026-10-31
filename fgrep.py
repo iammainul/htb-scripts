@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-# usage: python3 fgrep.py IDS_FILE FOLDER > results.txt
+# usage: python3 fgrep.py IDS_FILE FOLDER > matches.txt
+# Output: one line per match -> ID<TAB>file_path
 import os, sys
 from concurrent.futures import ThreadPoolExecutor
 
-if __name__ == "__main__":
+def main():
     if len(sys.argv) < 3:
-        sys.exit("usage: python3 fgrep.py IDS_FILE FOLDER > results.txt")
-
-    with open(sys.argv[1], errors="ignore") as fh:
-        ids = list(dict.fromkeys(l.strip() for l in fh if l.strip()))
-    files = [os.path.join(d, f) for d, _, fs in os.walk(sys.argv[2]) for f in fs]
+        sys.exit("usage: python3 fgrep.py IDS_FILE FOLDER > matches.txt")
+    with open(sys.argv[1], errors="ignore") as f:
+        ids = list(dict.fromkeys(l.strip() for l in f if l.strip()))
+    ids_b = [(i, i.encode()) for i in ids]
+    files = [os.path.join(d, n) for d, _, ns in os.walk(sys.argv[2]) for n in ns]
     hits = {i: [] for i in ids}
 
     def scan(p):
@@ -18,7 +19,7 @@ if __name__ == "__main__":
                 data = fh.read()
         except OSError:
             return p, []
-        return p, [i for i in ids if i.encode() in data]
+        return p, [i for i, b in ids_b if b in data]
 
     with ThreadPoolExecutor(32) as ex:
         for p, found in ex.map(scan, files, chunksize=64):
@@ -26,6 +27,8 @@ if __name__ == "__main__":
                 hits[i].append(p)
 
     for i in ids:
-        print("==", i)
         for p in sorted(hits[i]):
-            print(p)
+            print(i, p, sep="\t")
+
+if __name__ == "__main__":
+    main()
